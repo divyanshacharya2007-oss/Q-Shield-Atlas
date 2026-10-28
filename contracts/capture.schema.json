@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://q-shield-atlas.invalid/contracts/capture.schema.json",
+  "title": "Q-Shield Atlas Toy Capture",
+  "description": "Offline synthetic exchange artifact. Not a TLS wire capture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "service_id",
+    "label",
+    "protocol",
+    "public_key",
+    "handshake_bytes_hex",
+    "ciphertexts"
+  ],
+  "properties": {
+    "contract": { "const": "q-shield-capture/1" },
+    "service_id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "pattern": "(?i)TOY" },
+    "protocol": { "const": "synthetic-tls-like-toy-only" },
+    "public_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "modulus_hex", "public_exponent", "key_bits"],
+      "properties": {
+        "algorithm": { "const": "RSA" },
+        "modulus_hex": { "type": "string", "pattern": "^[0-9a-f]+$" },
+        "public_exponent": { "type": "integer", "minimum": 3 },
+        "key_bits": { "type": "integer", "minimum": 64, "maximum": 128 }
+      }
+    },
+    "handshake_bytes_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" },
+    "ciphertexts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["record_id", "encoding", "ciphertext_hex"],
+        "properties": {
+          "record_id": { "type": "string", "minLength": 1 },
+          "encoding": { "const": "raw-rsa-fixed-width-big-endian" },
+          "ciphertext_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" }
+        }
+      }
+    }
+  }
+}

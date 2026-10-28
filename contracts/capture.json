@@ -1,0 +1,20 @@
+{
+  "contract": "q-shield-capture/1",
+  "service_id": "toy-legacy-service",
+  "label": "TOY ONLY: weak RSA stand-in; not a TLS implementation",
+  "protocol": "synthetic-tls-like-toy-only",
+  "public_key": {
+    "algorithm": "RSA",
+    "modulus_hex": "b8afacfa266b1299",
+    "public_exponent": 65537,
+    "key_bits": 64
+  },
+  "handshake_bytes_hex": "51534849454c442d544f592d48414e445348414b452f310a736572766963655f69643d746f792d6c65676163792d736572766963650a7273615f626974733d36340a6c6162656c3d544f59204f4e4c593a207765616b20525341207374616e642d696e3b206e6f74206120544c5320696d706c656d656e746174696f6e0a",
+  "ciphertexts": [
+    {
+      "record_id": "record-0001",
+      "encoding": "raw-rsa-fixed-width-big-endian",
+      "ciphertext_hex": "6db26319ce67c675"
+    }
+  ]
+}

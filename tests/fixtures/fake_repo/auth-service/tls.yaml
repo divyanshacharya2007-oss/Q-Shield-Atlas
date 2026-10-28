@@ -1,0 +1,5 @@
+tls:
+  key_type: RSA
+  key_size: 2048
+  cipher_suites:
+    - TLS_AES_128_GCM_SHA256

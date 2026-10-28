@@ -1,0 +1,19 @@
+{
+  "contract": "q-shield-attack-evidence/1",
+  "service_id": "toy-legacy-service",
+  "label": "TOY ONLY: classical factorization demonstration",
+  "modulus_bits": 64,
+  "factors": [
+    "3464053147",
+    "3841755611"
+  ],
+  "private_exponent": "965151605505184613",
+  "decrypted_records": [
+    {
+      "record_id": "record-0001",
+      "plaintext_hex": "6c6567616379",
+      "plaintext_utf8": "legacy"
+    }
+  ],
+  "network_used": false
+}

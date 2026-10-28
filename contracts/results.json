@@ -1,0 +1,833 @@
+{
+  "contract": "q-shield-atlas-results/1",
+  "label": "Q-Shield Atlas pipeline results",
+  "generated_at": "2026-10-28T19:06:21.007739Z",
+  "detection": {
+    "static_status": "COMPLETED",
+    "static_findings": [
+      {
+        "asset_id": "repo-auth-service",
+        "domain": "auth-service",
+        "key_type": "RSA",
+        "key_size": 2048,
+        "evidence": [
+          {
+            "file": "auth-service/app.py",
+            "line": 1,
+            "match": "from cryptography.hazmat.primitives.asymmetric import rsa",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/app.py",
+            "line": 3,
+            "match": "AUTH_KEY = rsa.generate_private_key(public_exponent=65537, key_size=2048)",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/certificates/server.crt",
+            "line": 2,
+            "match": "Public Key Algorithm: rsaEncryption",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/tls.yaml",
+            "line": 2,
+            "match": "key_type: RSA",
+            "key_type": "RSA",
+            "key_size": 2048
+          }
+        ],
+        "cipher_suites": [
+          "TLS_AES_128_GCM_SHA256"
+        ]
+      },
+      {
+        "asset_id": "repo-payments-service",
+        "domain": "payments-service",
+        "key_type": "ECDSA",
+        "key_size": 256,
+        "evidence": [
+          {
+            "file": "payments-service/client.go",
+            "line": 3,
+            "match": "const signingAlgorithm = \"ECDSA\"",
+            "key_type": "ECDSA",
+            "key_size": null
+          },
+          {
+            "file": "payments-service/service.toml",
+            "line": 2,
+            "match": "key_type = \"ECDSA\"",
+            "key_type": "ECDSA",
+            "key_size": 256
+          }
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ]
+      }
+    ],
+    "live_status": "COMPLETED",
+    "live_observations": [
+      {
+        "host": "127.0.0.1",
+        "port": 65334,
+        "key_type": "RSA",
+        "key_size": 2048,
+        "cipher_suite": "TLS_AES_256_GCM_SHA384",
+        "tls_version": "TLSv1.3"
+      }
+    ],
+    "drifts": [
+      {
+        "asset_id": "repo-auth-service",
+        "mismatches": [
+          "cipher_suite: configured=TLS_AES_128_GCM_SHA256, negotiated=TLS_AES_256_GCM_SHA384"
+        ]
+      }
+    ]
+  },
+  "asset_inventory": {
+    "status": "COMPLETED",
+    "assets": [
+      {
+        "asset_id": "asset-000",
+        "domain": "auth.bank.internal",
+        "key_type": "RSA",
+        "key_size": 2048,
+        "tls_version": "TLSv1.2",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 7.0,
+        "vulnerable": true,
+        "dependencies": [],
+        "evidence": [],
+        "cipher_suites": [],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      },
+      {
+        "asset_id": "asset-001",
+        "domain": "payments.bank.internal",
+        "key_type": "ECDSA",
+        "key_size": 256,
+        "tls_version": "TLSv1.2",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 9.5,
+        "vulnerable": true,
+        "dependencies": [],
+        "evidence": [],
+        "cipher_suites": [],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      },
+      {
+        "asset_id": "asset-002",
+        "domain": "crypto.bank.internal",
+        "key_type": "RSA",
+        "key_size": 1024,
+        "tls_version": "TLSv1.1",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 9.5,
+        "vulnerable": true,
+        "dependencies": [],
+        "evidence": [],
+        "cipher_suites": [],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      },
+      {
+        "asset_id": "asset-003",
+        "domain": "api.bank.internal",
+        "key_type": "ML-KEM",
+        "key_size": 768,
+        "tls_version": "TLSv1.3",
+        "shelf_life_years": 10.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 9.5,
+        "vulnerable": false,
+        "dependencies": [],
+        "evidence": [],
+        "cipher_suites": [],
+        "remaining_exposure_years": 10.0,
+        "migration_status": "LEGACY",
+        "migrated": false
+      },
+      {
+        "asset_id": "repo-auth-service",
+        "domain": "auth-service",
+        "key_type": "RSA",
+        "key_size": 2048,
+        "tls_version": "TLSv1.2",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 7.0,
+        "vulnerable": true,
+        "dependencies": [],
+        "evidence": [
+          {
+            "file": "auth-service/app.py",
+            "line": 1,
+            "match": "from cryptography.hazmat.primitives.asymmetric import rsa",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/app.py",
+            "line": 3,
+            "match": "AUTH_KEY = rsa.generate_private_key(public_exponent=65537, key_size=2048)",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/certificates/server.crt",
+            "line": 2,
+            "match": "Public Key Algorithm: rsaEncryption",
+            "key_type": "RSA",
+            "key_size": 2048
+          },
+          {
+            "file": "auth-service/tls.yaml",
+            "line": 2,
+            "match": "key_type: RSA",
+            "key_type": "RSA",
+            "key_size": 2048
+          }
+        ],
+        "cipher_suites": [
+          "TLS_AES_128_GCM_SHA256"
+        ],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      },
+      {
+        "asset_id": "repo-payments-service",
+        "domain": "payments-service",
+        "key_type": "ECDSA",
+        "key_size": 256,
+        "tls_version": "TLSv1.2",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 2.0,
+        "risk_weight": 9.5,
+        "vulnerable": true,
+        "dependencies": [],
+        "evidence": [
+          {
+            "file": "payments-service/client.go",
+            "line": 3,
+            "match": "const signingAlgorithm = \"ECDSA\"",
+            "key_type": "ECDSA",
+            "key_size": null
+          },
+          {
+            "file": "payments-service/service.toml",
+            "line": 2,
+            "match": "key_type = \"ECDSA\"",
+            "key_type": "ECDSA",
+            "key_size": 256
+          }
+        ],
+        "cipher_suites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      },
+      {
+        "asset_id": "toy-legacy-service",
+        "domain": "toy-legacy-service",
+        "key_type": "RSA",
+        "key_size": 64,
+        "tls_version": "synthetic-toy",
+        "shelf_life_years": 3.0,
+        "effort_weeks": 1.0,
+        "risk_weight": 9.5,
+        "vulnerable": true,
+        "dependencies": [],
+        "remaining_exposure_years": 0.0,
+        "migration_status": "MIGRATED",
+        "migrated": true
+      }
+    ]
+  },
+  "schedule": {
+    "status": "COMPLETED",
+    "provider": "SciPy HiGHS local fallback (same QpiAI MILP matrix)",
+    "optimized": {
+      "objective": 19.846153846153847,
+      "schedule": [
+        {
+          "asset_id": "asset-003",
+          "start_week": 0,
+          "completion_week": 2,
+          "completion_year": 2026.0384615384614,
+          "scenario_exposure_years": {
+            "2030": 0.038461538461538464,
+            "2032": 0.038461538461538464,
+            "2035": 0.038461538461538464
+          },
+          "weighted_exposure_years": 1.0961538461538463
+        },
+        {
+          "asset_id": "asset-001",
+          "start_week": 2,
+          "completion_week": 4,
+          "completion_year": 2026.076923076923,
+          "scenario_exposure_years": {
+            "2030": 0.07692307692307693,
+            "2032": 0.07692307692307693,
+            "2035": 0.07692307692307693
+          },
+          "weighted_exposure_years": 2.1923076923076925
+        },
+        {
+          "asset_id": "asset-002",
+          "start_week": 4,
+          "completion_week": 6,
+          "completion_year": 2026.1153846153845,
+          "scenario_exposure_years": {
+            "2030": 0.11538461538461539,
+            "2032": 0.11538461538461539,
+            "2035": 0.11538461538461539
+          },
+          "weighted_exposure_years": 3.2884615384615383
+        },
+        {
+          "asset_id": "repo-payments-service",
+          "start_week": 6,
+          "completion_week": 8,
+          "completion_year": 2026.1538461538462,
+          "scenario_exposure_years": {
+            "2030": 0.15384615384615385,
+            "2032": 0.15384615384615385,
+            "2035": 0.15384615384615385
+          },
+          "weighted_exposure_years": 4.384615384615385
+        },
+        {
+          "asset_id": "repo-auth-service",
+          "start_week": 8,
+          "completion_week": 10,
+          "completion_year": 2026.1923076923076,
+          "scenario_exposure_years": {
+            "2030": 0.19230769230769232,
+            "2032": 0.19230769230769232,
+            "2035": 0.19230769230769232
+          },
+          "weighted_exposure_years": 4.038461538461539
+        },
+        {
+          "asset_id": "asset-000",
+          "start_week": 10,
+          "completion_week": 12,
+          "completion_year": 2026.2307692307693,
+          "scenario_exposure_years": {
+            "2030": 0.23076923076923078,
+            "2032": 0.23076923076923078,
+            "2035": 0.23076923076923078
+          },
+          "weighted_exposure_years": 4.846153846153846
+        }
+      ]
+    },
+    "baselines": {
+      "fcfs": {
+        "objective": 21.28846153846154,
+        "schedule": [
+          {
+            "asset_id": "asset-000",
+            "start_week": 0,
+            "completion_week": 2,
+            "completion_year": 2026.0384615384614,
+            "scenario_exposure_years": {
+              "2030": 0.038461538461538464,
+              "2032": 0.038461538461538464,
+              "2035": 0.038461538461538464
+            },
+            "weighted_exposure_years": 0.8076923076923077
+          },
+          {
+            "asset_id": "asset-001",
+            "start_week": 2,
+            "completion_week": 4,
+            "completion_year": 2026.076923076923,
+            "scenario_exposure_years": {
+              "2030": 0.07692307692307693,
+              "2032": 0.07692307692307693,
+              "2035": 0.07692307692307693
+            },
+            "weighted_exposure_years": 2.1923076923076925
+          },
+          {
+            "asset_id": "asset-002",
+            "start_week": 4,
+            "completion_week": 6,
+            "completion_year": 2026.1153846153845,
+            "scenario_exposure_years": {
+              "2030": 0.11538461538461539,
+              "2032": 0.11538461538461539,
+              "2035": 0.11538461538461539
+            },
+            "weighted_exposure_years": 3.2884615384615383
+          },
+          {
+            "asset_id": "asset-003",
+            "start_week": 6,
+            "completion_week": 8,
+            "completion_year": 2026.1538461538462,
+            "scenario_exposure_years": {
+              "2030": 0.15384615384615385,
+              "2032": 0.15384615384615385,
+              "2035": 0.15384615384615385
+            },
+            "weighted_exposure_years": 4.384615384615385
+          },
+          {
+            "asset_id": "repo-auth-service",
+            "start_week": 8,
+            "completion_week": 10,
+            "completion_year": 2026.1923076923076,
+            "scenario_exposure_years": {
+              "2030": 0.19230769230769232,
+              "2032": 0.19230769230769232,
+              "2035": 0.19230769230769232
+            },
+            "weighted_exposure_years": 4.038461538461539
+          },
+          {
+            "asset_id": "repo-payments-service",
+            "start_week": 10,
+            "completion_week": 12,
+            "completion_year": 2026.2307692307693,
+            "scenario_exposure_years": {
+              "2030": 0.23076923076923078,
+              "2032": 0.23076923076923078,
+              "2035": 0.23076923076923078
+            },
+            "weighted_exposure_years": 6.576923076923077
+          }
+        ]
+      },
+      "greedy": {
+        "objective": 19.846153846153847,
+        "schedule": [
+          {
+            "asset_id": "asset-001",
+            "start_week": 0,
+            "completion_week": 2,
+            "completion_year": 2026.0384615384614,
+            "scenario_exposure_years": {
+              "2030": 0.038461538461538464,
+              "2032": 0.038461538461538464,
+              "2035": 0.038461538461538464
+            },
+            "weighted_exposure_years": 1.0961538461538463
+          },
+          {
+            "asset_id": "asset-002",
+            "start_week": 2,
+            "completion_week": 4,
+            "completion_year": 2026.076923076923,
+            "scenario_exposure_years": {
+              "2030": 0.07692307692307693,
+              "2032": 0.07692307692307693,
+              "2035": 0.07692307692307693
+            },
+            "weighted_exposure_years": 2.1923076923076925
+          },
+          {
+            "asset_id": "asset-003",
+            "start_week": 4,
+            "completion_week": 6,
+            "completion_year": 2026.1153846153845,
+            "scenario_exposure_years": {
+              "2030": 0.11538461538461539,
+              "2032": 0.11538461538461539,
+              "2035": 0.11538461538461539
+            },
+            "weighted_exposure_years": 3.2884615384615383
+          },
+          {
+            "asset_id": "repo-payments-service",
+            "start_week": 6,
+            "completion_week": 8,
+            "completion_year": 2026.1538461538462,
+            "scenario_exposure_years": {
+              "2030": 0.15384615384615385,
+              "2032": 0.15384615384615385,
+              "2035": 0.15384615384615385
+            },
+            "weighted_exposure_years": 4.384615384615385
+          },
+          {
+            "asset_id": "asset-000",
+            "start_week": 8,
+            "completion_week": 10,
+            "completion_year": 2026.1923076923076,
+            "scenario_exposure_years": {
+              "2030": 0.19230769230769232,
+              "2032": 0.19230769230769232,
+              "2035": 0.19230769230769232
+            },
+            "weighted_exposure_years": 4.038461538461539
+          },
+          {
+            "asset_id": "repo-auth-service",
+            "start_week": 10,
+            "completion_week": 12,
+            "completion_year": 2026.2307692307693,
+            "scenario_exposure_years": {
+              "2030": 0.23076923076923078,
+              "2032": 0.23076923076923078,
+              "2035": 0.23076923076923078
+            },
+            "weighted_exposure_years": 4.846153846153846
+          }
+        ]
+      }
+    },
+    "exposure_years_avoided": {
+      "fcfs": 1.4423076923076934,
+      "greedy": 0.0
+    }
+  },
+  "waves": [
+    {
+      "wave_id": "wave-1-week-2",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "asset-001"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "asset-001": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    },
+    {
+      "wave_id": "wave-2-week-4",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "asset-002"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "asset-002": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    },
+    {
+      "wave_id": "wave-3-week-6",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "repo-payments-service"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "repo-payments-service": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    },
+    {
+      "wave_id": "wave-4-week-8",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "repo-auth-service"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "repo-auth-service": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    },
+    {
+      "wave_id": "wave-5-week-10",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "asset-000"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "asset-000": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    },
+    {
+      "wave_id": "wave-toy-capture",
+      "status": "PASSED",
+      "migrated_service_ids": [
+        "toy-legacy-service"
+      ],
+      "rolled_back": false,
+      "checks": {
+        "toy-legacy-service": {
+          "compatible": true,
+          "failures": []
+        }
+      }
+    }
+  ],
+  "classical_factoring": {
+    "status": "COMPLETED",
+    "evidence": {
+      "contract": "q-shield-attack-evidence/1",
+      "service_id": "toy-legacy-service",
+      "label": "TOY ONLY: classical factorization demonstration",
+      "modulus_bits": 64,
+      "factors": [
+        "3464053147",
+        "3841755611"
+      ],
+      "private_exponent": "965151605505184613",
+      "decrypted_records": [
+        {
+          "record_id": "record-0001",
+          "plaintext_hex": "6c6567616379",
+          "plaintext_utf8": "legacy"
+        }
+      ],
+      "network_used": false
+    }
+  },
+  "ledger": {
+    "status": "COMPLETED",
+    "merkle_root": "087748a21b792cea3fdddf499c5185edcec29d8c8a40b97d281b4d03e8e0bc76",
+    "signature_status": "FALLBACK_CLASSICAL",
+    "signature_algorithm": "ECDSA-SHA256",
+    "tamper_check": {
+      "status": "PASS",
+      "merkle_verification": "FAILED_AS_EXPECTED",
+      "hash_chain_validation": "FAILED_AS_EXPECTED"
+    }
+  },
+  "qaoa": {
+    "status": "COMPLETED",
+    "result": {
+      "label": "Measured cross-check only, no claim of quantum advantage.",
+      "backend": "local-statevector-fallback",
+      "backend_status": "FALLBACK_OFFLINE_OR_UNAVAILABLE",
+      "selected_asset_ids": [
+        "asset-001",
+        "asset-002"
+      ],
+      "selected_bitstring": "000110",
+      "selected_objective": 19.0,
+      "exact_optimum": 19.0,
+      "exact_optimal_asset_ids": [
+        "asset-001",
+        "asset-002"
+      ],
+      "approximation_ratio": 1.0,
+      "optimal_bitstring_probability": 0.028645833333333332,
+      "feasible_counts": {
+        "000001": 18,
+        "000010": 4,
+        "000011": 15,
+        "000100": 3,
+        "000101": 8,
+        "001001": 13,
+        "001100": 4,
+        "010000": 9,
+        "010001": 41,
+        "010010": 11,
+        "010011": 10,
+        "010100": 7,
+        "010101": 11,
+        "011000": 6,
+        "011001": 9,
+        "011010": 7,
+        "011100": 5,
+        "100001": 11,
+        "100010": 2,
+        "100011": 4,
+        "100100": 3,
+        "100110": 4,
+        "101000": 6,
+        "110000": 14,
+        "110001": 22,
+        "110010": 7,
+        "110011": 3,
+        "110100": 5,
+        "110101": 3,
+        "111000": 5,
+        "111001": 4,
+        "111010": 4,
+        "111100": 4,
+        "000000": 4,
+        "000110": 2,
+        "001010": 5,
+        "010110": 6,
+        "100000": 3,
+        "100101": 2,
+        "101001": 4,
+        "101100": 1,
+        "001000": 2,
+        "101010": 1
+      },
+      "discarded_infeasible_counts": 72,
+      "job_ids": [],
+      "depth_results": [
+        {
+          "layers": 1,
+          "backend": "local-statevector-fallback",
+          "feasible_shots": 112,
+          "discarded_infeasible_shots": 16,
+          "feasible_counts": {
+            "000001": 4,
+            "000010": 2,
+            "000011": 3,
+            "000100": 1,
+            "000101": 3,
+            "001001": 3,
+            "001100": 3,
+            "010000": 1,
+            "010001": 18,
+            "010010": 4,
+            "010011": 4,
+            "010100": 2,
+            "010101": 5,
+            "011000": 2,
+            "011001": 7,
+            "011010": 1,
+            "011100": 1,
+            "100001": 4,
+            "100010": 1,
+            "100011": 1,
+            "100100": 3,
+            "100110": 1,
+            "101000": 4,
+            "110000": 6,
+            "110001": 12,
+            "110010": 2,
+            "110011": 3,
+            "110100": 1,
+            "110101": 3,
+            "111000": 2,
+            "111001": 2,
+            "111010": 1,
+            "111100": 2
+          },
+          "optimizer": {
+            "optimizer": "COBYLA",
+            "optimizer_success": false,
+            "optimizer_message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+            "expected_energy": 91.03699305309439
+          }
+        },
+        {
+          "layers": 2,
+          "backend": "local-statevector-fallback",
+          "feasible_shots": 111,
+          "discarded_infeasible_shots": 17,
+          "feasible_counts": {
+            "000000": 3,
+            "000001": 5,
+            "000010": 2,
+            "000011": 7,
+            "000101": 4,
+            "000110": 1,
+            "001001": 6,
+            "001010": 5,
+            "001100": 1,
+            "010000": 4,
+            "010001": 2,
+            "010010": 6,
+            "010011": 3,
+            "010100": 4,
+            "010101": 2,
+            "010110": 6,
+            "011000": 4,
+            "011010": 4,
+            "011100": 4,
+            "100000": 1,
+            "100001": 5,
+            "100011": 1,
+            "100101": 2,
+            "100110": 2,
+            "101000": 1,
+            "101001": 3,
+            "101100": 1,
+            "110000": 4,
+            "110001": 5,
+            "110010": 3,
+            "110100": 2,
+            "111000": 3,
+            "111001": 1,
+            "111010": 2,
+            "111100": 2
+          },
+          "optimizer": {
+            "optimizer": "COBYLA",
+            "optimizer_success": false,
+            "optimizer_message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+            "expected_energy": 105.03627301664162
+          }
+        },
+        {
+          "layers": 3,
+          "backend": "local-statevector-fallback",
+          "feasible_shots": 89,
+          "discarded_infeasible_shots": 39,
+          "feasible_counts": {
+            "000000": 1,
+            "000001": 9,
+            "000011": 5,
+            "000100": 2,
+            "000101": 1,
+            "000110": 1,
+            "001000": 2,
+            "001001": 4,
+            "010000": 4,
+            "010001": 21,
+            "010010": 1,
+            "010011": 3,
+            "010100": 1,
+            "010101": 4,
+            "011001": 2,
+            "011010": 2,
+            "100000": 2,
+            "100001": 2,
+            "100010": 1,
+            "100011": 2,
+            "100110": 1,
+            "101000": 1,
+            "101001": 1,
+            "101010": 1,
+            "110000": 4,
+            "110001": 5,
+            "110010": 2,
+            "110100": 2,
+            "111001": 1,
+            "111010": 1
+          },
+          "optimizer": {
+            "optimizer": "COBYLA",
+            "optimizer_success": false,
+            "optimizer_message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+            "expected_energy": 81.58561069283937
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://q-shield-atlas.invalid/contracts/ledger-entry.schema.json",
+  "title": "Q-Shield Atlas Ledger Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["index", "type", "payload_hash", "prev_hash", "sig_mldsa", "ts"],
+  "properties": {
+    "index": { "type": "integer", "minimum": 0 },
+    "type": { "type": "string", "minLength": 1 },
+    "payload_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sig_mldsa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "status", "public_key_encoding", "public_key", "signature"],
+      "properties": {
+        "algorithm": { "type": "string", "enum": ["ML-DSA-65", "ECDSA-SHA256"] },
+        "status": { "type": "string", "enum": ["ML-DSA", "FALLBACK_CLASSICAL"] },
+        "public_key_encoding": { "type": "string", "enum": ["raw", "pem", "der-base64"] },
+        "public_key": { "type": "string", "minLength": 1 },
+        "signature": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ts": { "type": "string", "format": "date-time" }
+  }
+}

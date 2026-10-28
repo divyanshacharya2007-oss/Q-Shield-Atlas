@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Q-Shield Atlas | Exposure Tower</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #edf3ee;
+      --muted: #9caaa6;
+      --line: #30413e;
+      --panel: #111a1a;
+      --ground: #0a1112;
+      --mint: #78e0ae;
+      --red: #f06262;
+      --amber: #ebbd67;
+      --cyan: #6bc8d4;
+      font-family: "Aptos", "Segoe UI Variable", sans-serif;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(107, 200, 212, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(107, 200, 212, .035) 1px, transparent 1px),
+        radial-gradient(ellipse at 68% 7%, #263c37 0, transparent 42%),
+        var(--ground);
+      background-size: 32px 32px, 32px 32px, auto, auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 22px clamp(18px, 4vw, 56px) 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 17, 18, .82);
+    }
+    .eyebrow { color: var(--cyan); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    h1 { margin: 6px 0 0; font-size: 25px; line-height: 1.15; font-weight: 650; }
+    .header-meta { color: var(--muted); font-size: 12px; text-align: right; line-height: 1.6; }
+    main { padding: 20px clamp(18px, 4vw, 56px) 32px; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-block: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .metric { padding: 13px 16px 13px 0; }
+    .metric + .metric { border-left: 1px solid var(--line); padding-left: 16px; }
+    .metric-label { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .metric-value { margin-top: 5px; font-size: 21px; font-variant-numeric: tabular-nums; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(280px, .75fr); min-height: 500px; border: 1px solid var(--line); background: rgba(17, 26, 26, .85); }
+    .scene { position: relative; min-height: 500px; overflow: hidden; border-right: 1px solid var(--line); }
+    #tower3d, #tower2d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #tower2d { display: none; }
+    .scene-label { position: absolute; z-index: 1; left: 18px; top: 16px; color: var(--muted); font-size: 11px; text-transform: uppercase; pointer-events: none; }
+    .legend { position: absolute; z-index: 1; bottom: 14px; left: 16px; display: flex; gap: 15px; flex-wrap: wrap; color: var(--muted); font-size: 11px; pointer-events: none; }
+    .swatch { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: -1px; }
+    .side { display: flex; flex-direction: column; min-width: 0; }
+    .side-section { padding: 16px; border-bottom: 1px solid var(--line); }
+    .side-section h2 { margin: 0 0 12px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    #assetList { display: grid; gap: 0; max-height: 280px; overflow: auto; }
+    .asset-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(48, 65, 62, .7); cursor: pointer; }
+    .asset-row:first-child { border-top: 0; }
+    .asset-name { overflow: hidden; color: var(--ink); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .asset-sub { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .asset-risk { font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+    .status { display: inline-flex; gap: 6px; align-items: center; margin-top: 5px; color: var(--muted); font-size: 10px; text-transform: uppercase; }
+    .status::before { width: 6px; height: 6px; border-radius: 50%; background: var(--red); content: ""; }
+    .status.migrated::before { background: var(--mint); }
+    #detail { min-height: 70px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .detail-strong { color: var(--ink); }
+    #pipelineStatus { color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .pipeline-line { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid rgba(48, 65, 62, .65); padding: 7px 0; }
+    .pipeline-line:first-child { border-top: 0; }
+    .ok { color: var(--mint); }
+    .pending { color: var(--amber); }
+    footer { display: flex; justify-content: space-between; gap: 16px; padding-top: 12px; color: var(--muted); font-size: 10px; }
+    .error { color: var(--red); }
+    @media (max-width: 760px) {
+      header { padding: 18px; }
+      main { padding: 14px 18px 24px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .metric:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+      .metric:nth-child(4) { border-top: 1px solid var(--line); }
+      .workspace { grid-template-columns: 1fr; }
+      .scene { min-height: 390px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .side { display: grid; grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div><div class="eyebrow">PQC-01 / Migration Operations</div><h1>Exposure Tower</h1></div>
+    <div class="header-meta"><div id="contractLabel">Loading pipeline results</div><div id="timestamp">Waiting for results.json</div></div>
+  </header>
+  <main>
+    <section class="metrics" aria-label="Portfolio summary">
+      <div class="metric"><div class="metric-label">Tracked assets</div><div class="metric-value" id="assetCount">—</div></div>
+      <div class="metric"><div class="metric-label">Legacy exposure</div><div class="metric-value" id="exposureTotal">—</div></div>
+      <div class="metric"><div class="metric-label">Migrated</div><div class="metric-value" id="migratedCount">—</div></div>
+      <div class="metric"><div class="metric-label">Optimized exposure</div><div class="metric-value" id="optimizedExposure">—</div></div>
+    </section>
+    <section class="workspace">
+      <div class="scene">
+        <div class="scene-label">Service exposure by remaining years</div>
+        <canvas id="tower3d" aria-label="Three-dimensional service exposure tower"></canvas>
+        <canvas id="tower2d" aria-label="Two-dimensional service exposure fallback"></canvas>
+        <div class="legend"><span><i class="swatch" style="background:var(--red)"></i>Legacy</span><span><i class="swatch" style="background:var(--mint)"></i>Hybrid migrated</span><span><i class="swatch" style="background:#ffdf75"></i>Attacker beam</span></div>
+      </div>
+      <aside class="side">
+        <section class="side-section"><h2>Asset inventory</h2><div id="assetList"></div></section>
+        <section class="side-section"><h2>Selected service</h2><div id="detail">Select a tower segment or asset row.</div></section>
+        <section class="side-section"><h2>Pipeline evidence</h2><div id="pipelineStatus"></div></section>
+      </aside>
+    </section>
+    <footer><span>Visualized exclusively from contracts/results.json</span><span id="dataState">Loading</span></footer>
+  </main>
+  <script type="module">
+    const RESULTS_URL = "../contracts/results.json";
+    const $ = (id) => document.getElementById(id);
+    const number = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+    let results;
+    let assets = [];
+    let selectedIndex = 0;
+    let threeState = null;
+
+    function setText(id, value) { $(id).textContent = value; }
+
+    async function loadResults() {
+      const response = await fetch(RESULTS_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Could not load results.json (${response.status})`);
+      results = await response.json();
+      assets = results.asset_inventory?.assets ?? [];
+      renderSummary();
+      renderAssetList();
+      renderPipeline();
+      renderDetail();
+      try {
+        const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js");
+        initThree(THREE);
+      } catch (error) {
+        useCanvasFallback(error);
+      }
+    }
+
+    function renderSummary() {
+      const totalExposure = assets.reduce((sum, asset) => sum + number(asset.remaining_exposure_years), 0);
+      const migrated = assets.filter((asset) => asset.migrated).length;
+      const optimized = results.schedule?.optimized?.objective;
+      setText("contractLabel", results.label || "Q-Shield Atlas results");
+      setText("timestamp", results.generated_at || "Timestamp unavailable");
+      setText("assetCount", String(assets.length));
+      setText("exposureTotal", `${totalExposure.toFixed(2)} yr`);
+      setText("migratedCount", `${migrated} / ${assets.length}`);
+      setText("optimizedExposure", optimized == null ? "Not run" : `${number(optimized).toFixed(2)} yr`);
+      setText("dataState", `${results.contract || "Unknown contract"} · loaded`);
+    }
+
+    function renderAssetList() {
+      const list = $("assetList");
+      list.replaceChildren();
+      assets.forEach((asset, index) => {
+        const row = document.createElement("div");
+        row.className = "asset-row";
+        row.tabIndex = 0;
+        row.setAttribute("role", "button");
+        row.innerHTML = `<div><div class="asset-name"></div><div class="asset-sub"></div><span class="status ${asset.migrated ? "migrated" : ""}">${asset.migrated ? "Hybrid migrated" : "Legacy"}</span></div><div class="asset-risk"></div>`;
+        row.querySelector(".asset-name").textContent = asset.domain || asset.asset_id;
+        row.querySelector(".asset-sub").textContent = `${asset.key_type || "Unknown"} · ${asset.key_size ?? "?"} bits`;
+        row.querySelector(".asset-risk").textContent = `${number(asset.remaining_exposure_years).toFixed(2)} yr`;
+        row.addEventListener("click", () => selectAsset(index));
+        row.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") selectAsset(index); });
+        list.append(row);
+      });
+    }
+
+    function renderPipeline() {
+      const items = [
+        ["Static detection", results.detection?.static_status || "NOT_RUN"],
+        ["Live TLS probe", results.detection?.live_status || "NOT_RUN"],
+        ["Schedule", results.schedule?.status || "NOT_RUN"],
+        ["Classical factoring", results.classical_factoring?.status || "NOT_RUN"],
+        ["Signed ledger", results.ledger?.status || "NOT_RUN"],
+        ["Ledger tamper check", results.ledger?.tamper_check?.status || "NOT_RUN"],
+        ["QAOA cross-check", results.qaoa?.status || "NOT_RUN"],
+      ];
+      const container = $("pipelineStatus");
+      container.replaceChildren();
+      for (const [label, status] of items) {
+        const line = document.createElement("div");
+        line.className = "pipeline-line";
+        const name = document.createElement("span");
+        const value = document.createElement("span");
+        name.textContent = label;
+        value.textContent = status;
+        value.className = status === "COMPLETED" ? "ok" : "pending";
+        line.append(name, value);
+        container.append(line);
+      }
+      if (results.ledger?.merkle_root) {
+        const root = document.createElement("div");
+        root.className = "asset-sub";
+        root.textContent = `Merkle root ${results.ledger.merkle_root.slice(0, 16)}… · ${results.ledger.signature_status || "signature unknown"}`;
+        container.append(root);
+      }
+    }
+
+    function renderDetail() {
+      const asset = assets[selectedIndex];
+      const detail = $("detail");
+      if (!asset) { detail.textContent = "No assets in results.json."; return; }
+      detail.replaceChildren();
+      const lines = [
+        [`Asset`, asset.asset_id],
+        [`Exposure`, `${number(asset.remaining_exposure_years).toFixed(2)} years`],
+        [`Risk weight`, asset.risk_weight ?? "—"],
+        [`Migration state`, asset.migration_status || (asset.migrated ? "MIGRATED" : "LEGACY")],
+      ];
+      for (const [label, value] of lines) {
+        const line = document.createElement("div");
+        const strong = document.createElement("span");
+        strong.className = "detail-strong";
+        strong.textContent = `${label}: `;
+        line.append(strong, document.createTextNode(String(value)));
+        detail.append(line);
+      }
+    }
+
+    function selectAsset(index) {
+      selectedIndex = index;
+      renderDetail();
+      if (threeState) threeState.select(index);
+      else drawCanvasFallback();
+    }
+
+    function initThree(THREE) {
+      const canvas = $("tower3d");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor(0x000000, 0);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.set(7.5, 6.2, 10.5);
+      camera.lookAt(0, 1.5, 0);
+      scene.add(new THREE.HemisphereLight(0xbde9d5, 0x182322, 2.0));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+      keyLight.position.set(5, 9, 6);
+      scene.add(keyLight);
+      const towerGroup = new THREE.Group();
+      scene.add(towerGroup);
+      const materialFor = (migrated, selected) => new THREE.MeshStandardMaterial({
+        color: migrated ? 0x51c995 : 0xdb5e5e,
+        emissive: selected ? (migrated ? 0x1d6549 : 0x702d2d) : 0x000000,
+        roughness: 0.36,
+        metalness: 0.12,
+      });
+      const segments = [];
+      const beamMaterial = new THREE.MeshBasicMaterial({ color: 0xffdf75, transparent: true, opacity: 0.8 });
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1, 8), beamMaterial);
+      beam.rotation.z = Math.PI / 2;
+      beam.position.set(0, 0.4, 0);
+      scene.add(beam);
+      const beamBits = [];
+      for (let i = 0; i < 10; i++) {
+        const bit = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffdf75 }));
+        scene.add(bit);
+        beamBits.push(bit);
+      }
+      const floor = new THREE.GridHelper(16, 20, 0x42635a, 0x263936);
+      floor.position.y = -0.07;
+      scene.add(floor);
+      const maxExposure = Math.max(1, ...assets.map((asset) => number(asset.remaining_exposure_years)));
+      const spacing = 1.28;
+      assets.forEach((asset, index) => {
+        const height = Math.max(0.14, 3.2 * number(asset.remaining_exposure_years) / maxExposure);
+        const geometry = new THREE.BoxGeometry(0.75, height, 0.75);
+        const material = materialFor(Boolean(asset.migrated), index === selectedIndex);
+        const segment = new THREE.Mesh(geometry, material);
+        segment.position.set((index - (assets.length - 1) / 2) * spacing, height / 2, 0);
+        segment.userData.index = index;
+        towerGroup.add(segment);
+        segments.push(segment);
+        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: 0xc3d6cc, transparent: true, opacity: 0.35 }));
+        edge.position.copy(segment.position);
+        towerGroup.add(edge);
+      });
+      const resize = () => {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        renderer.setSize(width, height, false);
+        camera.aspect = Math.max(1, width) / Math.max(1, height);
+        camera.updateProjectionMatrix();
+      };
+      const observer = new ResizeObserver(resize);
+      observer.observe(canvas.parentElement);
+      resize();
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      canvas.addEventListener("pointerdown", (event) => {
+        const bounds = canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+        pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(segments)[0];
+        if (hit) selectAsset(hit.object.userData.index);
+      });
+      const clock = new THREE.Clock();
+      const animate = () => {
+        requestAnimationFrame(animate);
+        const time = clock.getElapsedTime();
+        towerGroup.rotation.y = Math.sin(time * 0.14) * 0.08;
+        const current = assets[selectedIndex];
+        const migrated = Boolean(current?.migrated);
+        const beamX = (selectedIndex - (assets.length - 1) / 2) * spacing;
+        beam.position.x = beamX / 2;
+        beam.scale.y = Math.max(0.05, Math.abs(beamX) + 1.2);
+        beam.position.y = 0.35 + (migrated ? 0.7 + Math.abs(Math.sin(time * 5)) * 0.08 : Math.sin(time * 3) * 0.06);
+        beam.visible = !migrated;
+        beamBits.forEach((bit, index) => {
+          const pulse = (time * 1.6 + index / beamBits.length) % 1;
+          bit.visible = migrated && pulse > 0.55;
+          bit.position.set(beamX + Math.sin(time * 8 + index) * pulse * 0.8, 0.35 + pulse * 0.65, (index % 2 ? 1 : -1) * pulse * 0.6);
+        });
+        segments.forEach((segment, index) => {
+          segment.material.emissive.setHex(index === selectedIndex ? (assets[index].migrated ? 0x1d6549 : 0x702d2d) : 0x000000);
+        });
+        renderer.render(scene, camera);
+      };
+      animate();
+      threeState = { select: () => renderer.render(scene, camera) };
+    }
+
+    function useCanvasFallback(error) {
+      console.warn("Three.js/WebGL unavailable; using 2D canvas fallback.", error);
+      $("tower3d").style.display = "none";
+      $("tower2d").style.display = "block";
+      setText("dataState", `${results.contract || "Results"} · 2D fallback`);
+      drawCanvasFallback();
+      window.addEventListener("resize", drawCanvasFallback);
+      $("tower2d").addEventListener("pointerdown", (event) => {
+        const canvas = $("tower2d");
+        const bounds = canvas.getBoundingClientRect();
+        const localX = event.clientX - bounds.left;
+        const count = Math.max(assets.length, 1);
+        const segmentWidth = bounds.width / count;
+        selectAsset(Math.min(count - 1, Math.floor(localX / segmentWidth)));
+      });
+    }
+
+    function drawCanvasFallback() {
+      const canvas = $("tower2d");
+      if (!canvas || canvas.style.display === "none") return;
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      context.scale(ratio, ratio);
+      context.clearRect(0, 0, width, height);
+      context.strokeStyle = "rgba(107, 200, 212, .10)";
+      context.lineWidth = 1;
+      for (let x = 0; x < width; x += 32) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x, height); context.stroke(); }
+      for (let y = 0; y < height; y += 32) { context.beginPath(); context.moveTo(0, y); context.lineTo(width, y); context.stroke(); }
+      const count = Math.max(assets.length, 1);
+      const gap = 10;
+      const segmentWidth = Math.max(8, (width - gap * (count + 1)) / count);
+      const maxExposure = Math.max(1, ...assets.map((asset) => number(asset.remaining_exposure_years)));
+      assets.forEach((asset, index) => {
+        const exposure = number(asset.remaining_exposure_years);
+        const segmentHeight = Math.max(8, (height - 110) * exposure / maxExposure);
+        const x = gap + index * (segmentWidth + gap);
+        const y = height - 58 - segmentHeight;
+        context.fillStyle = asset.migrated ? "#51c995" : "#db5e5e";
+        context.fillRect(x, y, segmentWidth, segmentHeight);
+        if (index === selectedIndex) {
+          context.strokeStyle = "#edf3ee";
+          context.lineWidth = 2;
+          context.strokeRect(x - 2, y - 2, segmentWidth + 4, segmentHeight + 4);
+        }
+        context.save();
+        context.translate(x + segmentWidth / 2, height - 38);
+        context.rotate(-Math.PI / 4);
+        context.fillStyle = "#b7c5c0";
+        context.font = "11px Aptos, Segoe UI, sans-serif";
+        context.textAlign = "left";
+        context.fillText(String(asset.domain || asset.asset_id).slice(0, 20), 0, 0);
+        context.restore();
+        if (index === selectedIndex && asset.migrated) {
+          context.strokeStyle = "rgba(255, 223, 117, .9)";
+          context.lineWidth = 3;
+          context.setLineDash([6, 6]);
+          context.beginPath();
+          context.moveTo(8, y + 10);
+          context.lineTo(width - 8, y + 10);
+          context.stroke();
+          context.setLineDash([]);
+          context.fillStyle = "#ffdf75";
+          context.fillRect(width / 2 - 3, y + 2, 6, 16);
+        } else if (index === selectedIndex) {
+          context.strokeStyle = "rgba(255, 223, 117, .9)";
+          context.lineWidth = 2;
+          context.beginPath();
+          context.moveTo(8, y + 10);
+          context.lineTo(width - 8, y + 10);
+          context.stroke();
+        }
+      });
+      context.fillStyle = "#9caaa6";
+      context.font = "11px Aptos, Segoe UI, sans-serif";
+      context.fillText("Remaining exposure-years", 14, 20);
+    }
+
+    loadResults().catch((error) => {
+      setText("dataState", `Unable to load contracts/results.json: ${error.message}`);
+      setText("contractLabel", "Results unavailable");
+      $("dataState").classList.add("error");
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

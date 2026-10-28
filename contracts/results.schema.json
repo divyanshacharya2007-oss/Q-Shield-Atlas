@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://q-shield-atlas.invalid/contracts/results.schema.json",
+  "title": "Q-Shield Atlas Pipeline Results",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "label", "generated_at", "detection", "asset_inventory", "schedule", "waves", "classical_factoring", "ledger", "qaoa"],
+  "properties": {
+    "contract": { "const": "q-shield-atlas-results/1" },
+    "label": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "detection": { "type": "object", "additionalProperties": false, "required": ["static_status", "static_findings", "live_status", "live_observations", "drifts"], "properties": { "static_status": { "type": "string", "enum": ["COMPLETED", "EMPTY"] }, "static_findings": { "type": "array", "items": { "type": "object" } }, "live_status": { "type": "string" }, "live_observations": { "type": "array", "items": { "type": "object" } }, "drifts": { "type": "array", "items": { "type": "object" } } } },
+    "asset_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "assets"],
+      "properties": {
+        "status": { "type": "string", "enum": ["COMPLETED", "EMPTY"] },
+        "assets": { "type": "array", "items": { "type": "object", "required": ["asset_id", "domain", "key_type", "key_size", "shelf_life_years", "effort_weeks", "risk_weight", "remaining_exposure_years", "migration_status", "migrated"], "additionalProperties": true, "properties": { "asset_id": { "type": "string" }, "domain": { "type": "string" }, "key_type": { "type": "string" }, "key_size": { "type": "number" }, "shelf_life_years": { "type": "number", "minimum": 0 }, "effort_weeks": { "type": "number", "minimum": 0 }, "risk_weight": { "type": "number", "minimum": 0 }, "remaining_exposure_years": { "type": "number", "minimum": 0 }, "migration_status": { "type": "string" }, "migrated": { "type": "boolean" } } } }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "provider", "optimized", "baselines", "exposure_years_avoided"],
+      "properties": {
+        "status": { "type": "string", "enum": ["COMPLETED", "NOT_RUN"] },
+        "provider": { "type": ["string", "null"] },
+        "optimized": { "$ref": "#/$defs/plan" },
+        "baselines": { "type": "object", "additionalProperties": false, "required": ["fcfs", "greedy"], "properties": { "fcfs": { "$ref": "#/$defs/plan" }, "greedy": { "$ref": "#/$defs/plan" } } },
+        "exposure_years_avoided": { "type": "object", "additionalProperties": false, "required": ["fcfs", "greedy"], "properties": { "fcfs": { "type": ["number", "null"] }, "greedy": { "type": ["number", "null"] } } }
+      }
+    },
+    "waves": { "type": "array", "items": { "type": "object", "required": ["wave_id", "status", "migrated_service_ids", "rolled_back", "checks"], "additionalProperties": false, "properties": { "wave_id": { "type": "string" }, "status": { "type": "string" }, "migrated_service_ids": { "type": "array", "items": { "type": "string" } }, "rolled_back": { "type": "boolean" }, "checks": { "type": "object" } } } },
+    "classical_factoring": { "type": "object", "additionalProperties": false, "required": ["status", "evidence"], "properties": { "status": { "type": "string", "enum": ["COMPLETED", "NOT_RUN"] }, "evidence": { "type": ["object", "array", "null"] } } },
+    "ledger": { "type": "object", "additionalProperties": false, "required": ["status", "merkle_root", "signature_status", "signature_algorithm", "tamper_check"], "properties": { "status": { "type": "string", "enum": ["COMPLETED", "NOT_RUN"] }, "merkle_root": { "type": ["string", "null"] }, "signature_status": { "type": ["string", "null"] }, "signature_algorithm": { "type": ["string", "null"] }, "tamper_check": { "type": "object", "required": ["status"], "properties": { "status": { "type": "string" } }, "additionalProperties": true } } },
+    "qaoa": { "type": "object", "additionalProperties": false, "required": ["status", "result"], "properties": { "status": { "type": "string", "enum": ["COMPLETED", "NOT_RUN"] }, "result": { "type": ["object", "null"] } } }
+  },
+  "$defs": {
+    "plan": { "type": "object", "additionalProperties": false, "required": ["objective", "schedule"], "properties": { "objective": { "type": ["number", "null"] }, "schedule": { "type": "array", "items": { "type": "object" } } } }
+  }
+}

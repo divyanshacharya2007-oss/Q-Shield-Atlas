@@ -1,0 +1,4 @@
+[tls]
+key_type = "ECDSA"
+key_size = 256
+cipher_suites = ["TLS_AES_256_GCM_SHA384"]
